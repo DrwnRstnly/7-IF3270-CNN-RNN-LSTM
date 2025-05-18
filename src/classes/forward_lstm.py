@@ -62,6 +62,7 @@ class Bidirectional:
         out_b = self.bw.forward(X[:, ::-1, :])
         if self.return_sequences:
             # both out_f/out_b must be 3D
+            out_b = out_b[:, ::-1, :] 
             if out_f.ndim != 3 or out_b.ndim != 3:
                 raise ValueError('Cannot return sequences when sublayers do not output sequences')
             # concat feature dim
@@ -74,20 +75,21 @@ class Bidirectional:
                 out_b = out_b[:, -1, :]
             return np.concatenate([out_f, out_b], axis=1)  # (batch, units*2)
 
+def unpack(l):
+    w = l.get_weights()
+    if len(w)==3: return w
+    k,u = w; b = np.zeros(4*l.units, dtype=k.dtype); return (k,u,b)
+
 def build_pipeline(keras_model):
     layers = []
     # 1) Embedding
     emb_W = keras_model.get_layer('emb').get_weights()[0]
     layers.append(Embedding(emb_W))
+
     # 2) (Bi)LSTM
     for layer in keras_model.layers:
         from tensorflow.keras.layers import LSTM as KerasLSTM, Bidirectional as KerasBi
         if isinstance(layer, KerasBi):
-            # unpack forward & backward weights with bias fallback
-            def unpack(l):
-                w = l.get_weights()
-                if len(w)==3: return w
-                k,u = w; b = np.zeros(4*l.units, dtype=k.dtype); return (k,u,b)
             fw_k,fw_u,fw_b = unpack(layer.forward_layer)
             bw_k,bw_u,bw_b = unpack(layer.backward_layer)
             rs = layer.return_sequences
@@ -97,8 +99,15 @@ def build_pipeline(keras_model):
                 return_sequences=rs
             ))
         elif isinstance(layer, KerasLSTM):
-            # skip LSTM inside a Bidirectional (already handled)
-            continue
+            k,u,b = unpack(layer)
+            layers.append(LSTM(
+                kernel=k,
+                recurrent=u,
+                bias=b,
+                units=layer.units,
+                return_sequences=layer.return_sequences
+            ))
+            
     # 3) Dense output (softmax)
     for layer in keras_model.layers[::-1]:
         if isinstance(layer, tf.keras.layers.Dense) and layer.activation.__name__=='softmax':
