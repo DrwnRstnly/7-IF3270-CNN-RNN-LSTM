@@ -1,3 +1,4 @@
+from typing import List
 import numpy as np
 import tensorflow as tf
 from classes.Layer import Layer
@@ -118,7 +119,7 @@ def build_pipeline(keras_model):
             break
     return layers
 
-def predict(pipeline, X_tok: np.ndarray) -> np.ndarray:
+def predict(pipeline: List[Layer], X_tok: np.ndarray) -> np.ndarray:
     a = pipeline[0].forward(X_tok)
     for layer in pipeline[1:]:
         a = layer.forward(a)
