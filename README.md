@@ -20,15 +20,19 @@ cd 7-IF3270-CNN-RNN-LSTM
 cd src
 ```
 3. Lalu, gunakan code editor kesukaanmu yang dapat support notebook (.ipynb). Contohnya, `vscode`.
-4. Jalankan semua file notebook `.ipynb` dengan fitur `Run All`
+4. Jalankan semua file notebook `.ipynb` dengan fitur `Run All`. Dalam kasus ini adalah `cnn.ipynb`, `lstm.ipynb`, dan `rnn.ipynb`.
 5. Seharusnya, program notebook sudah berjalan. **Ingat untuk menjalankan notebook mulai dari blok yang teratas, untuk mencegah error pada blok dibawahnya.**
 
-**Note: Ingat untuk melakukan pip install terhadap library yang tidak tersedia pada environment Anda, dengan menggunakan command `pip install <nama_modul>`**
+**Note: Ingat untuk melakukan pip install terhadap library yang tidak tersedia pada environment Anda, dengan menggunakan command `pip install <nama_modul>`**<br>
+**Modul atau library yang diperlukan dapat diinstal seperti pada `requirements.txt` dengan menjalankan `pip install -r /path/to/requirements.txt`**<br>
+**Disarankan juga untuk menggunakan venv agar tidak konflik dengan library atau module yang sudah terinstal secara global**
 
+## Membaca
+Jika ingin melihat implementasi model dari scratch, maka implementasi dapat dilihat pada folder `src/classes` yang mana terdapat 3 jenis file yang mengandung implementasi forward propagation by scratch untuk masing-masing jenis model, yaitu `forward_cnn.py`, `forward_lstm.py`, dan `forward_rnn.py`.
 ## Pembagian Tugas
 This project was developed by:
 | NIM      | Nama                    | Kontribusi                                                                                                                                                                                                               |
 |----------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 13522045 | Elbert Chailes           | Pembuatan model RNN, inisialisasi bobot, regularisasi, normalisasi, laporan                                                          |
-| 13522047 | Farel Winalda    | Pembuatan model CNN, inisialisasi bobot, regularisasi, normalisasi, laporan                                                          |
-| 13522115 | Derwin Rustanly    | Pembuatan model CNN & LSTM, inisialisasi bobot, regularisasi, normalisasi, laporan                                                          |
+| 13522045 | Elbert Chailes           | Pembuatan model RNN                                                        |
+| 13522047 | Farel Winalda    | Pembuatan model CNN                                                        |
+| 13522115 | Derwin Rustanly    | Pembuatan model CNN & LSTM                                                  |
